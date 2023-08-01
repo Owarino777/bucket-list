@@ -7,10 +7,9 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class MainController extends AbstractController
 {
-    #[Route('/aboutus', name: 'main_aboutus')]
+    #[Route('/', name: 'home')]
     public function home()
     {
-        echo "coucou";
-        die();
+        return $this->render('home.html.twig'); // Remplacez 'home.html.twig' par le nom de votre template Twig pour la page d'accueil
     }
 }

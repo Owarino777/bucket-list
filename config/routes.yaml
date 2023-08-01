@@ -1,7 +1,7 @@
-#index:
-#    path: /
-#    controller: App\Controller\DefaultController::index
+index:
+    path: /
+    controller: App\Controller\DefaultController::index
 
-main_aboutus:
-    path: /aboutus
-    controller: App\Controller\MainController::home
+#main_aboutus:
+#   path: /
+#  controller: App\Controller\MainController::home
