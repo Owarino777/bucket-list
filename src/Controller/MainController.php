@@ -11,7 +11,7 @@ class MainController extends AbstractController
     #[Route('/', name: 'home')]
     public function home(): HttpFoundationResponse
     {
-        return $this->render('main/home.html.twig'); // Remplacez 'home.html.twig' par le nom de votre template Twig pour la page d'accueil
+        return $this->render(view: 'main/home.html.twig'); // Remplacez 'home.html.twig' par le nom de votre template Twig pour la page d'accueil
     }
 
     #[Route('/test', name: 'home_test')]
