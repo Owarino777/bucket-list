@@ -1,3 +1,4 @@
 {
-    "symfony-vscode.phpExecutablePath": "/usr/bin/php"
+    "symfony-vscode.phpExecutablePath": "/usr/bin/php",
+    "php.validate.executablePath": ""
 }
