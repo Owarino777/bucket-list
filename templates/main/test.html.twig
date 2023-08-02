@@ -1,49 +1,47 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-		<meta http-equiv="X-UA-Compatible" content="ie=edge">
-		<title>Ma page d'accueil</title>
-	</head>
-	<body>
-		<h1>testounet</h1>
-		<div>
+{% extends "base.html.twig" %}
 
-			<div>{{ "+1 year"|date('Y') }}</div>
+{% block body %}
+	<h1>testounet</h1>
+	<div>
 
-			{% set name = "Guillaume" %}
-			<h2>{{name|length}}</h2>
+		<div>{{ "+1 year"|date('Y') }}</div>
 
-			{#crée un tableau #}
-			{% set colors = ["orange", "brown", "turquoise", "blue",] %}
+		{% set name = "Guillaume" %}
+		<h2>{{name|length}}</h2>
 
-			<div>nombre de couleurs:
-				{{colors|length}}</div>
+		{#crée un tableau #}
+		{% set colors = ["orange", "brown", "turquoise", "blue",] %}
 
-			<div>{{ colors|join(' / ')}}</div>
+		<div>nombre de couleurs:
+			{{colors|length}}</div>
 
-			{% for color in colors %}
-				<div>{{ loop.index }}</div>
-				<div style="background-color: {{ color }}">{{ color }}</div>
-			{% endfor %}
+		<div>{{ colors|join(' / ')}}</div>
 
-			{# un objet #}
-			{% set book = {
+		{% for color in colors %}
+			<div>{{ loop.index }}</div>
+			<div style="background-color: {{ color }}">{{ color }}</div>
+		{% endfor %}
+
+		{# un objet #}
+		{% set book = {
                 title: 'pifpaf',
                 year: 2000,
                 author: "John Doe"}
             %}
 
-			<h3>{{ book.author }}</h3>
-			<div>
-				{% for key, val in book %}
-					<div>{{ key }}
-						:
-						{{ val }}</div>
-				{% endfor %}
-			</div>
-
+		<h3>{{ book.author }}</h3>
+		<div>
+			{% for key, val in book %}
+				<div>{{ key }}
+					:
+					{{ val }}</div>
+			{% endfor %}
 		</div>
-	</body>
-</html>
+
+	</div>
+{% endblock %}
+
+{% block title %}
+	{{ parent() }}
+	| testounet
+{% endblock %}
