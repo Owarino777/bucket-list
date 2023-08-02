@@ -1,4 +1,7 @@
 {
     "symfony-vscode.phpExecutablePath": "/usr/bin/php",
-    "php.validate.executablePath": ""
+    "php.validate.executablePath": "",
+    "emmet.includeLanguages": {
+        "twig": "html"
+    }
 }
