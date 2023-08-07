@@ -5,8 +5,14 @@
 {% endblock %}
 
 {% block body %}
-	<section>
-		todo: afficher les séries
+	<section class='bucket-list'>
+		{% for buckete in bucket %}
+			<article>
+				<a href="{{ path('bucket_details', {'id': buckete.id}) }}" title="View serie's details">
+					<img src="{{ asset('img/posters/series/' ~ buckete.poster )}}" alt="{{ buckete.name }}">
+				</a>
+			</article>
+		{% endfor %}
 	</section>
 
 {% endblock %}
