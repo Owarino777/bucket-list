@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Form\BucketType;
 use App\Entity\Bucket;
 use App\Repository\BucketRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,8 +18,8 @@ class BucketController extends AbstractController
     #[Route('', name: 'list')]
     public function list(BucketRepository $bucketRepository): Response
     {
-        $bucket = $bucketRepository->findBy([], ['popularity' => 'DESC', 'vote' => 'DESC'], limit: 30);
-
+        //$bucket = $bucketRepository->findBy([], ['popularity' => 'DESC', 'vote' => 'DESC'], limit: 30);
+        $bucket = $bucketRepository->findBestBucket();
 
         return $this->render('bucket/list.html.twig', [
             "bucket" => $bucket
@@ -37,10 +38,29 @@ class BucketController extends AbstractController
     }
 
     #[Route('/create', name: 'create')]
-    public function create(Request $request): Response
-    {
-        dump($request);
-        return $this->render('bucket/create.html.twig', []);
+    public function create(
+        Request $request,
+        EntityManagerInterface $entityManager
+    ): Response {
+
+        $bucket = new Bucket();
+        $bucket->setDateCreated(new \DateTime());
+
+        $bucketForm = $this->createForm(BucketType::class, $bucket);
+
+        $bucketForm->handleRequest($request);
+
+        if ($bucketForm->isSubmitted()) {
+            $entityManager->persist($bucket);
+            $entityManager->flush();
+
+            $this->addFlash('succes', 'Serie added! Good job.');
+            return $this->redirectToRoute('bucket_details', ['id' => $bucket->getId()]);
+        }
+
+        return $this->render('bucket/create.html.twig', [
+            'bucketForm' => $bucketForm->createView()
+        ]);
     }
 
     #[Route('/demo', name: "em-demo")]

@@ -2,7 +2,13 @@
 
 {% block body %}
 	<div>
-		{# todo: afficher le formulaire #}
+		{{ form_start (bucketForm) }}
+
+		{{ form_widget (bucketForm) }}
+
+		<button>Create!</button>
+
+		{{ form_end (bucketForm) }}
 	</div>
 {% endblock %}
 
