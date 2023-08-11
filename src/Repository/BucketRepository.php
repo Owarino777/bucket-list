@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Bucket;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -39,6 +40,11 @@ class BucketRepository extends ServiceEntityRepository
 
         //version QueryBuilder
         $queryBuilder = $this->createQueryBuilder('s');
+
+        $queryBuilder->leftJoin('s.seasons', 'seas')
+            ->addSelect('seas');
+
+
         $queryBuilder->andWhere('s.popularity > 100');
         $queryBuilder->andWhere('s.vote > 8');
         $queryBuilder->addOrderBy('s.popularity', 'DESC');
@@ -46,10 +52,13 @@ class BucketRepository extends ServiceEntityRepository
 
 
         $query->setMaxResults(50);
-        $results = $query->getResult();
-        return $results;
-    }
 
+        $paginator = new Paginator($query);
+
+
+        return $paginator;
+    }
+}
     //    /**
     //     * @return Bucket[] Returns an array of Bucket objects
     //     */
@@ -74,4 +83,3 @@ class BucketRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
-}

@@ -8,7 +8,7 @@
 	<section class='bucket-list'>
 		{% for buckete in bucket %}
 			<article>
-				<a href="{{ path('bucket_details', {'id': buckete.id}) }}" title="View serie's details">
+				<a href="{{ path('bucket_details', {'id': buckete.id}) }}" title="View serie's details | {{ buckete.seasons|length }} seasons">
 					<img src="{{ asset('img/posters/series/' ~ buckete.poster )}}" alt="{{ buckete.name }}">
 				</a>
 			</article>

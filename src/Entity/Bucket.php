@@ -3,8 +3,11 @@
 namespace App\Entity;
 
 use App\Repository\BucketRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: BucketRepository::class)]
 class Bucket
@@ -14,15 +17,19 @@ class Bucket
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Please provide a title for the serie!!")]
+    #[Assert\Length(min: 2, max: 255)]
+    #[ORM\Column(type: "string", length: 255)]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $overview = null;
 
-    #[ORM\Column(length: 50)]
+    #[Assert\Choice(choices: ["Cancelled", "returning", "ended"])]
+    #[ORM\Column(type: "string",  length: 50)]
     private ?string $status = null;
 
+    #[Assert\Range(min: "0", max: "10", notInRangeMessage: "You are not in range dude!")]
     #[ORM\Column(type: Types::DECIMAL, precision: 3, scale: 1)]
     private ?string $vote = null;
 
@@ -35,6 +42,8 @@ class Bucket
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $firstAirDate = null;
 
+
+    #[Assert\GreaterThanOrEqual(propertyPath: "firstAirDate")]
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $lastAirDate = null;
 
@@ -52,6 +61,14 @@ class Bucket
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $dateModified = null;
+
+    #[ORM\OneToMany(mappedBy: 'serie', targetEntity: Season::class, cascade: ["remove"])]
+    private Collection $seasons;
+
+    public function __construct()
+    {
+        $this->seasons = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -210,6 +227,36 @@ class Bucket
     public function setDateModified(?\DateTimeInterface $dateModified): static
     {
         $this->dateModified = $dateModified;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Season>
+     */
+    public function getSeasons(): Collection
+    {
+        return $this->seasons;
+    }
+
+    public function addSeason(Season $season): static
+    {
+        if (!$this->seasons->contains($season)) {
+            $this->seasons->add($season);
+            $season->setSerie($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSeason(Season $season): static
+    {
+        if ($this->seasons->removeElement($season)) {
+            // set the owning side to null (unless already changed)
+            if ($season->getSerie() === $this) {
+                $season->setSerie(null);
+            }
+        }
 
         return $this;
     }

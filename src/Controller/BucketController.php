@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Form\BucketType;
 use App\Entity\Bucket;
 use App\Repository\BucketRepository;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,6 +32,9 @@ class BucketController extends AbstractController
     {
         $buckete = $bucketRepository->find($id);
 
+        if (!$buckete) {
+            throw $this->createNotFoundException('oh no!!!');
+        }
 
         return $this->render('bucket/details.html.twig', [
             "serie" => $buckete
@@ -50,7 +54,7 @@ class BucketController extends AbstractController
 
         $bucketForm->handleRequest($request);
 
-        if ($bucketForm->isSubmitted()) {
+        if ($bucketForm->isSubmitted() && $bucketForm->isValid()) {
             $entityManager->persist($bucket);
             $entityManager->flush();
 
@@ -102,5 +106,21 @@ class BucketController extends AbstractController
 
 
         return $this->render('bucket/create.html.twig', []);
+    }
+
+    #[Route('/delete/{id}', name: 'delete')]
+    public function delete(int $id, EntityManagerInterface $entityManager)
+    {
+        $bucket = $entityManager->getRepository(Bucket::class)->find($id);
+
+        if (!$bucket) {
+            throw $this->createNotFoundException('ohh shittt!!! Bucket not found XDXDXDXD');
+        }
+
+
+        $entityManager->remove($bucket);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('home');
     }
 }
